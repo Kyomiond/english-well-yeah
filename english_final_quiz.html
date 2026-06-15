@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Final Exam Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --card: #20233a;
+    --border: rgba(255,255,255,0.08);
+    --accent: #6c63ff;
+    --accent-light: #8a84ff;
+    --accent-glow: rgba(108,99,255,0.18);
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.12);
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.12);
+    --text: #f0f0f8;
+    --muted: #8b8fa8;
+    --label: #c4c6d8;
+    --tag-vocab: #6c63ff;
+    --tag-vocab-bg: rgba(108,99,255,0.15);
+    --tag-grammar: #06b6d4;
+    --tag-grammar-bg: rgba(6,182,212,0.15);
+    --tag-writing: #f59e0b;
+    --tag-writing-bg: rgba(245,158,11,0.15);
+    --tag-reading: #22c55e;
+    --tag-reading-bg: rgba(34,197,94,0.15);
+    --tag-idioms: #ec4899;
+    --tag-idioms-bg: rgba(236,72,153,0.15);
+    --tag-functional: #f97316;
+    --tag-functional-bg: rgba(249,115,22,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1230 50%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 1.5rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(108,99,255,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #a8a4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  .site-header p {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .header-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .hstat {
+    text-align: center;
+  }
+  .hstat-val {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    display: block;
+  }
+  .hstat-lbl {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* LAYOUT */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  /* CONTROLS */
+  .controls {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 0.75rem 1.25rem;
+  }
+  .controls-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .cat-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .cat-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .cat-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+  .controls-right {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  .ctrl-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .ctrl-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .ctrl-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .ctrl-btn.primary:hover { background: var(--accent-light); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    padding: 1.25rem 0 0.5rem;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* SCORE BANNER */
+  .score-banner {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin: 2rem 0;
+  }
+  .score-banner.visible { display: block; }
+  .score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    border: 3px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-light);
+  }
+  .score-banner h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .score-banner p { color: var(--muted); margin-bottom: 1.5rem; }
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-top: 1.5rem;
+  }
+  .score-cell {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid var(--border);
+  }
+  .score-cell-val { font-size: 1.3rem; font-weight: 600; color: var(--text); }
+  .score-cell-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* QUESTION CARD */
+  .questions-list {
+    padding: 1rem 0 4rem;
+  }
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s;
+  }
+  .q-card:hover { border-color: rgba(255,255,255,0.14); }
+  .q-card.answered-correct { border-color: rgba(34,197,94,0.3); }
+  .q-card.answered-wrong { border-color: rgba(239,68,68,0.25); }
+
+  .q-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.9rem;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .q-num {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .q-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .tag-Vocabulary { background: var(--tag-vocab-bg); color: var(--tag-vocab); }
+  .tag-Grammar { background: var(--tag-grammar-bg); color: var(--tag-grammar); }
+  .tag-Writing { background: var(--tag-writing-bg); color: var(--tag-writing); }
+  .tag-Reading { background: var(--tag-reading-bg); color: var(--tag-reading); }
+  .tag-Idioms { background: var(--tag-idioms-bg); color: var(--tag-idioms); }
+  .tag-Functional { background: var(--tag-functional-bg); color: var(--tag-functional); }
+
+  .q-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--label);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.5;
+    transition: all 0.14s;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+  }
+  .opt-btn .opt-letter {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    min-width: 18px;
+    padding-top: 1px;
+  }
+  .opt-btn.correct {
+    background: var(--green-bg);
+    border-color: rgba(34,197,94,0.4);
+    color: var(--green);
+  }
+  .opt-btn.correct .opt-letter { color: var(--green); }
+  .opt-btn.wrong {
+    background: var(--red-bg);
+    border-color: rgba(239,68,68,0.3);
+    color: var(--red);
+  }
+  .opt-btn.wrong .opt-letter { color: var(--red); }
+  .opt-btn.reveal-correct {
+    background: var(--green-bg);
+    border-color: rgba(34,197,94,0.3);
+    color: var(--green);
+    opacity: 0.75;
+  }
+  .opt-btn.reveal-correct .opt-letter { color: var(--green); }
+  .opt-btn:disabled { cursor: default; }
+
+  .feedback {
+    margin-top: 10px;
+    font-size: 13px;
+    padding: 9px 13px;
+    border-radius: 8px;
+    display: none;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .feedback.no { background: var(--red-bg); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 2rem 1rem 1.5rem; }
+    .header-stats { gap: 1.25rem; }
+    .controls-right { margin-left: 0; width: 100%; justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <h1>English Final Exam</h1>
+    <p>Vocabulary &bull; Grammar &bull; Writing &bull; Reading &bull; Idioms &bull; Functional Language</p>
+    <div class="header-stats">
+      <div class="hstat"><span class="hstat-val" id="totalQ">0</span><span class="hstat-lbl">Questions</span></div>
+      <div class="hstat"><span class="hstat-val" id="totalAnswered">0</span><span class="hstat-lbl">Answered</span></div>
+      <div class="hstat"><span class="hstat-val" id="totalCorrect">0</span><span class="hstat-lbl">Correct</span></div>
+      <div class="hstat"><span class="hstat-val" id="totalScore">0%</span><span class="hstat-lbl">Score</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <button class="cat-btn active" onclick="filterCat('All')">All</button>
+    <button class="cat-btn" onclick="filterCat('Vocabulary')">Vocabulary</button>
+    <button class="cat-btn" onclick="filterCat('Grammar')">Grammar</button>
+    <button class="cat-btn" onclick="filterCat('Writing')">Writing</button>
+    <button class="cat-btn" onclick="filterCat('Reading')">Reading</button>
+    <button class="cat-btn" onclick="filterCat('Idioms')">Idioms</button>
+    <button class="cat-btn" onclick="filterCat('Functional')">Functional</button>
+    <div class="controls-right">
+      <button class="ctrl-btn" onclick="resetAll()">Reset</button>
+      <button class="ctrl-btn primary" onclick="showResults()">See results</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="progText">0 / 0 answered</span>
+      <span id="progPct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+  </div>
+
+  <div class="score-banner" id="scoreBanner">
+    <div class="score-circle" id="scoreCircle">0%</div>
+    <h2 id="scoreGrade">Great work!</h2>
+    <p id="scoreMsg"></p>
+    <div class="score-grid" id="scoreGrid"></div>
+  </div>
+
+  <div class="questions-list" id="qList"></div>
+</div>
+
+<footer>
+  <p>English Final Exam &mdash; All questions from your study material</p>
+</footer>
+
+<script>
+const QUESTIONS = [
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY BUILDING – Section 1
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"accustomed –", opts:["A) someone who determines the value of something","B) real","C) stuck between two things","D) used to"], ans:3},
+  {cat:"Vocabulary", q:"appraiser –", opts:["A) used to","B) real","C) someone who determines the value of something","D) find something by chance"], ans:2},
+  {cat:"Vocabulary", q:"astronomer –", opts:["A) stuck between two things","B) used to","C) real","D) scientist who studies outer space"], ans:3},
+  {cat:"Vocabulary", q:"authentic –", opts:["A) used to","B) real","C) someone who determines the value of something","D) stuck between two things"], ans:1},
+  {cat:"Vocabulary", q:"stumble upon –", opts:["A) stuck between two things","B) used to","C) find something by chance","D) real"], ans:2},
+  {cat:"Vocabulary", q:"wedged –", opts:["A) scientist who studies outer space","B) real","C) stuck between two things","D) used to"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY BUILDING – Section 2
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"evolve –", opts:["A) lack of ability","B) develop and change","C) honorable","D) shown to have exclusive legal ownership"], ans:1},
+  {cat:"Vocabulary", q:"exception –", opts:["A) something that is different from what is expected","B) shown to have exclusive legal ownership","C) not favoring one side or the other","D) lack of ability"], ans:0},
+  {cat:"Vocabulary", q:"fictitious –", opts:["A) not favoring one side or the other","B) honorable","C) make-believe, not real","D) develop and change"], ans:2},
+  {cat:"Vocabulary", q:"humanitarian –", opts:["A) honorable","B) develop and change","C) devoted to improving the lives of all people","D) lack of ability"], ans:2},
+  {cat:"Vocabulary", q:"limitations –", opts:["A) something that is different from what is expected","B) lack of ability","C) honorable","D) not favoring one side or the other"], ans:1},
+  {cat:"Vocabulary", q:"neutral –", opts:["A) develop and change","B) not favoring one side or the other","C) devoted to improving the lives of all people","D) honorable"], ans:1},
+  {cat:"Vocabulary", q:"noble –", opts:["A) lack of ability","B) make-believe, not real","C) develop and change","D) honorable"], ans:3},
+  {cat:"Vocabulary", q:"trademarked –", opts:["A) something that is different from what is expected","B) shown to have exclusive legal ownership","C) make-believe, not real","D) lack of ability"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY BUILDING – Section 3
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"confidential –", opts:["A) done or communicated in secret","B) deliberately harmful","C) leaving out","D) better than others"], ans:0},
+  {cat:"Vocabulary", q:"derogatory –", opts:["A) done or communicated in secret","B) not vulnerable to being affected by something","C) deliberately harmful","D) better than others"], ans:2},
+  {cat:"Vocabulary", q:"divulge –", opts:["A) leaving out","B) better than others","C) done or communicated in secret","D) deliberately harmful"], ans:2},
+  {cat:"Vocabulary", q:"excluding –", opts:["A) done or communicated in secret","B) leaving out","C) not vulnerable to being affected by something","D) deliberately harmful"], ans:1},
+  {cat:"Vocabulary", q:"immune –", opts:["A) deliberately harmful","B) better than others","C) not vulnerable to being affected by something","D) done or communicated in secret"], ans:2},
+  {cat:"Vocabulary", q:"malicious –", opts:["A) leaving out","B) done or communicated in secret","C) deliberately harmful","D) better than others"], ans:2},
+  {cat:"Vocabulary", q:"superior –", opts:["A) not vulnerable to being affected by something","B) deliberately harmful","C) leaving out","D) better than others"], ans:3},
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY BUILDING – Section 4
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"detectable –", opts:["A) remaining whole and unharmed","B) able to be found","C) confused","D) very surprising"], ans:1},
+  {cat:"Vocabulary", q:"disoriented –", opts:["A) very surprising","B) very thin and tired","C) confused","D) imagining things that are not real"], ans:2},
+  {cat:"Vocabulary", q:"exhilarating –", opts:["A) very surprising","B) causing a strong feeling of excitement and happiness","C) remaining whole and unharmed","D) confused"], ans:1},
+  {cat:"Vocabulary", q:"haggard –", opts:["A) remaining whole and unharmed","B) very thin and tired","C) confused","D) very surprising"], ans:1},
+  {cat:"Vocabulary", q:"hallucinating –", opts:["A) imagining things that are not real","B) very thin and tired","C) causing a strong feeling of excitement and happiness","D) remaining whole and unharmed"], ans:0},
+  {cat:"Vocabulary", q:"intact –", opts:["A) very surprising","B) confused","C) remaining whole and unharmed","D) very thin and tired"], ans:2},
+  {cat:"Vocabulary", q:"reception –", opts:["A) very thin and tired","B) very surprising","C) the quality of radio waves received by a device","D) confused"], ans:2},
+  {cat:"Vocabulary", q:"startling –", opts:["A) remaining whole and unharmed","B) very surprising","C) confused","D) the quality of radio waves received by a device"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY BUILDING – Section 5
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"emerge –", opts:["A) serious food shortage","B) idea of perfection","C) appear","D) change in form; be different from"], ans:2},
+  {cat:"Vocabulary", q:"famine –", opts:["A) change in form; be different from","B) serious food shortage","C) idea of perfection","D) appear"], ans:1},
+  {cat:"Vocabulary", q:"ideal –", opts:["A) appear","B) change in form; be different from","C) idea of perfection","D) slightly overweight"], ans:2},
+  {cat:"Vocabulary", q:"instinctive –", opts:["A) the relationship of one part of something to another part in size and shape","B) idea of perfection","C) done from feeling rather than reason or learned behavior","D) slightly overweight"], ans:2},
+  {cat:"Vocabulary", q:"plump –", opts:["A) slightly overweight","B) serious food shortage","C) appear","D) idea of perfection"], ans:0},
+  {cat:"Vocabulary", q:"proportion –", opts:["A) the relationship of one part of something to another part in size and shape","B) slightly overweight","C) change in form; be different from","D) appear"], ans:0},
+  {cat:"Vocabulary", q:"standards –", opts:["A) idea of perfection","B) something against which other things are measured","C) serious food shortage","D) appear"], ans:1},
+  {cat:"Vocabulary", q:"vary –", opts:["A) something against which other things are measured","B) slightly overweight","C) change in form; be different from","D) appear"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY BUILDING – Section 6
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"absent-minded –", opts:["A) found everywhere","B) something done without thought, as is done by a machine","C) forgetful, distracted","D) harm"], ans:2},
+  {cat:"Vocabulary", q:"adhesive –", opts:["A) harm","B) a material that causes two materials to stick together","C) thrown away","D) forgetful, distracted"], ans:1},
+  {cat:"Vocabulary", q:"automatically –", opts:["A) harm","B) something done without thought, as is done by a machine","C) found everywhere","D) forgetful, distracted"], ans:1},
+  {cat:"Vocabulary", q:"damage –", opts:["A) found everywhere","B) thrown away","C) harm","D) something done without thought"], ans:2},
+  {cat:"Vocabulary", q:"discarded –", opts:["A) harm","B) forgetful, distracted","C) found everywhere","D) thrown away"], ans:3},
+  {cat:"Vocabulary", q:"ubiquitous –", opts:["A) thrown away","B) harm","C) found everywhere","D) something done without thought, as is done by a machine"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  GENERAL VOCABULARY MATCHING
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"boost –", opts:["A) failure","B) put up with","C) very angry","D) raise"], ans:3},
+  {cat:"Vocabulary", q:"endure –", opts:["A) raise","B) put up with","C) failure","D) interfered with"], ans:1},
+  {cat:"Vocabulary", q:"flop –", opts:["A) very angry","B) new thing","C) failure","D) raise"], ans:2},
+  {cat:"Vocabulary", q:"novelty –", opts:["A) raise","B) failure","C) put up with","D) new thing"], ans:3},
+  {cat:"Vocabulary", q:"outraged –", opts:["A) interfered with","B) very angry","C) failure","D) new thing"], ans:1},
+  {cat:"Vocabulary", q:"tampered –", opts:["A) very angry","B) new thing","C) put up with","D) interfered with"], ans:3},
+
+  // ══════════════════════════════════════════
+  //  VOCABULARY – SYNONYMS
+  // ══════════════════════════════════════════
+  {cat:"Vocabulary", q:"acquire – synonym:", opts:["A) teach","B) borrow","C) learn","D) lose"], ans:2},
+  {cat:"Vocabulary", q:"consecutive – synonym:", opts:["A) random","B) alternate","C) broken","D) continuous"], ans:3},
+  {cat:"Vocabulary", q:"currently – synonym:", opts:["A) regularly","B) previously","C) presently","D) rarely"], ans:2},
+  {cat:"Vocabulary", q:"extinct – synonym:", opts:["A) alive","B) rare","C) active","D) dead"], ans:3},
+  {cat:"Vocabulary", q:"immense – synonym:", opts:["A) tiny","B) gigantic","C) normal","D) quick"], ans:1},
+  {cat:"Vocabulary", q:"routinely – synonym:", opts:["A) never","B) rarely","C) regularly","D) once"], ans:2},
+  {cat:"Vocabulary", q:"solitary – synonym:", opts:["A) crowded","B) single","C) noisy","D) happy"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  IDIOMS – Real Talk: Relationships & Behavior
+  // ══════════════════════════════════════════
+  {cat:"Idioms", q:"split up –", opts:["A) permanently leave","B) stopped being friends / broke up","C) something that is not stable","D) without someone knowing"], ans:1},
+  {cat:"Idioms", q:"on again, off again –", opts:["A) permanently","B) without someone knowing","C) something that is not stable","D) stopped being friends"], ans:2},
+  {cat:"Idioms", q:"for good –", opts:["A) without someone knowing","B) something that is not stable","C) permanently","D) stopped being friends"], ans:2},
+  {cat:"Idioms", q:"behind someone's back –", opts:["A) without someone knowing","B) permanently","C) a person who says bad things about another person behind his/her back","D) stopped being friends"], ans:0},
+  {cat:"Idioms", q:"backstabber –", opts:["A) to criticize someone to other people","B) a person who says bad things about another person behind his/her back","C) permanently","D) something that is not stable"], ans:1},
+  {cat:"Idioms", q:"bad-mouth –", opts:["A) without someone knowing","B) stopped being friends","C) to criticize someone to other people","D) permanently"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  IDIOMS – Real Talk: Emotions & States
+  // ══════════════════════════════════════════
+  {cat:"Idioms", q:"eating (someone) –", opts:["A) feeling sad and disappointed","B) bothering","C) be very angry","D) upset, agitated"], ans:1},
+  {cat:"Idioms", q:"down in the dumps –", opts:["A) upset, agitated","B) be very angry","C) feeling sad and disappointed","D) disappeared without a trace"], ans:2},
+  {cat:"Idioms", q:"hit the roof –", opts:["A) feeling sad and disappointed","B) be very angry","C) upset, agitated","D) disappeared without a trace"], ans:1},
+  {cat:"Idioms", q:"bent out of shape –", opts:["A) be very angry","B) disappeared without a trace","C) bothering","D) upset, agitated"], ans:3},
+  {cat:"Idioms", q:"vanished into thin air –", opts:["A) bothering","B) upset, agitated","C) disappeared without a trace","D) feeling sad and disappointed"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  IDIOMS – Real Talk: Crowds & Food
+  // ══════════════════════════════════════════
+  {cat:"Idioms", q:"jam packed –", opts:["A) snack","B) put up with","C) crunchy junk foods","D) very crowded"], ans:3},
+  {cat:"Idioms", q:"elbow one's way –", opts:["A) very crowded","B) put up with","C) make one's way through a crowd using some physical force","D) snack"], ans:2},
+  {cat:"Idioms", q:"munchies –", opts:["A) very crowded","B) snack","C) crunchy junk foods","D) put up with"], ans:2},
+  {cat:"Idioms", q:"deal with –", opts:["A) very crowded","B) crunchy junk foods","C) snack","D) put up with"], ans:3},
+  {cat:"Idioms", q:"bite –", opts:["A) crunchy junk foods","B) put up with","C) snack","D) very crowded"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  IDIOMS – Real Talk: Miscellaneous
+  // ══════════════════════════════════════════
+  {cat:"Idioms", q:"no big deal –", opts:["A) forget about something","B) not something of great importance","C) irresponsible person","D) exaggerate the importance of something"], ans:1},
+  {cat:"Idioms", q:"slip one's mind –", opts:["A) irresponsible person","B) uncertain","C) forget about something","D) extremely happy"], ans:2},
+  {cat:"Idioms", q:"make too much of something –", opts:["A) Don't worry about it","B) exaggerate the importance of something","C) by very much, obviously","D) not something of great importance"], ans:1},
+  {cat:"Idioms", q:"Don't sweat it –", opts:["A) speak indirectly","B) Don't worry about it","C) irresponsible person","D) looked again in surprise"], ans:1},
+  {cat:"Idioms", q:"flake –", opts:["A) uncertain","B) significant opportunity","C) extremely happy","D) irresponsible person"], ans:3},
+  {cat:"Idioms", q:"iffy –", opts:["A) irresponsible person","B) uncertain","C) extremely happy","D) significant opportunity"], ans:1},
+  {cat:"Idioms", q:"break –", opts:["A) extremely happy","B) free","C) significant opportunity","D) irresponsible person"], ans:2},
+  {cat:"Idioms", q:"on cloud nine –", opts:["A) really impress them","B) to shock or disorient someone","C) very angry","D) extremely happy"], ans:3},
+  {cat:"Idioms", q:"freak someone out –", opts:["A) really impress them","B) free","C) to shock or disorient someone","D) by very much, obviously"], ans:2},
+  {cat:"Idioms", q:"beat around the bush –", opts:["A) speak indirectly","B) speak directly","C) be very angry","D) by very much, obviously"], ans:0},
+  {cat:"Idioms", q:"by far –", opts:["A) looked again in surprise","B) free","C) by very much, obviously","D) really impress them"], ans:2},
+  {cat:"Idioms", q:"fit to be tied –", opts:["A) extremely happy","B) very angry","C) by very much, obviously","D) irresponsible person"], ans:1},
+  {cat:"Idioms", q:"did a double take –", opts:["A) really impress them","B) to shock or disorient someone","C) looked again in surprise","D) free"], ans:2},
+  {cat:"Idioms", q:"blow them away –", opts:["A) to shock or disorient someone","B) looked again in surprise","C) free","D) really impress them"], ans:3},
+  {cat:"Idioms", q:"on the house –", opts:["A) looked again in surprise","B) really impress them","C) free","D) to shock or disorient someone"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  FUNCTIONAL LANGUAGE
+  // ══════════════════════════════════════════
+  {cat:"Functional", q:"\"I wish I hadn't… / If only I…\" – function:", opts:["A) Responding to an Apology","B) Promising to Keep a Secret","C) Expressing Regret","D) Telling a Secret"], ans:2},
+  {cat:"Functional", q:"\"I know how that feels / That's too bad\" – function:", opts:["A) Asking Someone to Repeat","B) Expressing Understanding","C) Expressing Regret","D) Apologizing"], ans:1},
+  {cat:"Functional", q:"\"Would you mind repeating that? / Pardon?\" – function:", opts:["A) Telling a Secret","B) Apologizing","C) Asking Someone to Repeat","D) Expressing Regret"], ans:2},
+  {cat:"Functional", q:"\"Can you keep a secret? / You'll never believe what I heard\" – function:", opts:["A) Asking Someone to Repeat","B) Responding to an Apology","C) Expressing Understanding","D) Telling a Secret"], ans:3},
+  {cat:"Functional", q:"\"My lips are sealed / I won't say a word about it\" – function:", opts:["A) Promising to Keep a Secret","B) Expressing Regret","C) Telling a Secret","D) Making a Complaint"], ans:0},
+  {cat:"Functional", q:"\"I feel awful about this / Can you forgive me?\" – function:", opts:["A) Responding to an Apology","B) Telling a Secret","C) Apologizing","D) Expressing Regret"], ans:2},
+  {cat:"Functional", q:"\"Don't sweat it / It's no big deal\" – function:", opts:["A) Apologizing","B) Responding to an Apology","C) Making a Complaint","D) Promising to Keep a Secret"], ans:1},
+  {cat:"Functional", q:"\"This is completely unsatisfactory / I want to make a complaint\" – function:", opts:["A) Making a Complaint","B) Responding to an Apology","C) Expressing Regret","D) Asking Someone to Repeat"], ans:0},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Reported Speech
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"Which sentence is correct in reported speech?\nMy mother said, \"Gossiping is a bad habit.\"", opts:["A) My mother said, \"Gossiping is a bad habit.\"","B) My mother said that gossiping is a bad habit.","C) My mother said that gossiping were a bad habit.","D) My mother said gossiping is a bad habit."], ans:1},
+  {cat:"Grammar", q:"He said, \"Mark cheated on the test.\" The correct reported speech is:", opts:["A) He said that Mark cheated on the test.","B) He said that Mark had cheated on the test.","C) He said Mark cheats on the test.","D) He said that Mark was cheating on the test."], ans:1},
+  {cat:"Grammar", q:"\"He is gossiping right now.\" → They said he ________ gossiping.", opts:["A) is","B) was","C) has been","D) had been"], ans:1},
+  {cat:"Grammar", q:"Jane asked, \"Is the rumor true?\" The correct reported form is:", opts:["A) Jane asked that the rumor is true.","B) Jane asked whether the rumor was true.","C) Jane asked if the rumor is true.","D) Jane asked that the rumor was true."], ans:1},
+  {cat:"Grammar", q:"\"Don't spread that rumor!\" → He told me ________.", opts:["A) don't spread that rumor","B) to not spread that rumor","C) not spread that rumor","D) not to spread that rumor"], ans:3},
+  {cat:"Grammar", q:"She says that gossiping ________ a bad habit. (present reporting verb)", opts:["A) was","B) is","C) were","D) had been"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Past Continuous / Past Perfect
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"While I ________ home, it started to rain.", opts:["A) walked","B) was walking","C) had walked","D) have walked"], ans:1},
+  {cat:"Grammar", q:"What ________ at 7 p.m. yesterday?", opts:["A) did you do","B) have you done","C) were you doing","D) had you done"], ans:2},
+  {cat:"Grammar", q:"I ________ to call her, but I completely forgot.", opts:["A) was going","B) am going","C) have gone","D) had gone"], ans:0},
+  {cat:"Grammar", q:"By the time we got there, the movie ________.", opts:["A) started","B) had started","C) has started","D) was starting"], ans:1},
+  {cat:"Grammar", q:"King Umberto ________ into his carriage when he was assassinated.", opts:["A) climbed","B) had been climbing","C) was climbing","D) has climbed"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – So / Such
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"The film was ________ interesting that we watched it twice.", opts:["A) such","B) so","C) too","D) such an"], ans:1},
+  {cat:"Grammar", q:"It was ________ a difficult exam that many students failed.", opts:["A) so","B) such","C) very","D) too"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Gerunds / Infinitives
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"After ________ the news, she began to cry.", opts:["A) she heard","B) hearing","C) to hear","D) heard"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Quantifiers
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"There isn't ________ information available about the event.", opts:["A) many","B) any","C) few","D) a"], ans:1},
+  {cat:"Grammar", q:"She has ________ friends in Jeddah.", opts:["A) little","B) a few","C) a little","D) much"], ans:1},
+  {cat:"Grammar", q:"How ________ money do you need for the trip?", opts:["A) many","B) much","C) few","D) a lot"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Causative / Passive
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"This car needs ________ before the long journey.", opts:["A) to fix","B) fixing","C) to be fixed","D) fixed"], ans:2},
+  {cat:"Grammar", q:"I ________ my hair cut next week.", opts:["A) will have","B) have","C) had","D) am having"], ans:0},
+  {cat:"Grammar", q:"The mirror was ________, so we threw it away.", opts:["A) breaking","B) broken","C) broke","D) break"], ans:1},
+  {cat:"Grammar", q:"I ________ my laptop repaired last week.", opts:["A) have","B) had to","C) must have","D) had"], ans:3},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – That / Which / What / Whether
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"I believe ________ hard work leads to success.", opts:["A) that","B) which","C) what","D) whether"], ans:0},
+  {cat:"Grammar", q:"It is clear ________ we need more practice in grammar.", opts:["A) which","B) that","C) what","D) whether"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Participles / Adjectives
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"Companies ________ beauty products understand customer needs.", opts:["A) sell","B) selling","C) sold","D) to sell"], ans:1},
+  {cat:"Grammar", q:"Watching a beautiful sunset is ________.", opts:["A) excited","B) exciting","C) excite","D) excitement"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Future
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"By 2030, many people ________ foreign languages using AI.", opts:["A) will be learning","B) are learning","C) learned","D) have learned"], ans:0},
+  {cat:"Grammar", q:"Free translation apps ________ better in the future.", opts:["A) are going to get","B) will","C) get","D) got"], ans:0},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Relative Clauses
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"The teacher ________ helped me is very kind.", opts:["A) who","B) which","C) whose","D) whom"], ans:0},
+  {cat:"Grammar", q:"This is the city ________ I grew up.", opts:["A) which","B) where","C) that","D) in which"], ans:1},
+  {cat:"Grammar", q:"The man ________ wallet was stolen went to the police.", opts:["A) who","B) whose","C) which","D) whom"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Modals
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"You ________ stop spreading rumors.", opts:["A) must","B) may","C) might","D) could"], ans:0},
+  {cat:"Grammar", q:"I can't find my phone. I ________ left it in the car.", opts:["A) must","B) should have","C) had better","D) may have"], ans:3},
+  {cat:"Grammar", q:"You ________ apologized to your friend yesterday.", opts:["A) must","B) can have","C) may","D) should have"], ans:3},
+  {cat:"Grammar", q:"The package ________ yesterday, but it wasn't.", opts:["A) could send","B) must send","C) should have been sent","D) had better send"], ans:2},
+  {cat:"Grammar", q:"We ________ arrive at 8:00, but the meeting started late.", opts:["A) were supposed to","B) are supposed to","C) have supposed to","D) had supposed to"], ans:0},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Conditionals / Subjunctive
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"If I ________ more time, I would have finished the project.", opts:["A) had","B) had had","C) would have","D) have"], ans:1},
+  {cat:"Grammar", q:"He speaks ________ he knows everything about the topic.", opts:["A) if","B) as if","C) like","D) whether"], ans:1},
+  {cat:"Grammar", q:"It's high time you ________ a job.", opts:["A) find","B) found","C) finding","D) to find"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  GRAMMAR – Articles
+  // ══════════════════════════════════════════
+  {cat:"Grammar", q:"We use \"a/an\" with ________.", opts:["A) plural nouns","B) uncountable nouns","C) specific things","D) singular countable nouns (first mention)"], ans:3},
+  {cat:"Grammar", q:"We use \"the\" with superlative adjectives, such as \"________ best solution.\"", opts:["A) a","B) an","C) the","D) no article"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  WRITING SKILLS
+  // ══════════════════════════════════════════
+  {cat:"Writing", q:"When writing a personal account or narrative, you should think about people in terms of:", opts:["A) Only their names and ages","B) Personality, physical characteristics, skills, behavior, feelings and aspirations","C) Only their jobs and locations","D) Only what they said and did"], ans:1},
+  {cat:"Writing", q:"In a personal narrative, you should avoid:", opts:["A) Restricting your writing to only a series of facts","B) Including any personal thoughts","C) Describing places","D) Using any dialogue"], ans:0},
+  {cat:"Writing", q:"Factual sentences in a model personal text are usually:", opts:["A) Written in a separate paragraph","B) Interspersed with personal thoughts, comments, and feelings","C) Highlighted in bold","D) Written at the end only"], ans:1},
+  {cat:"Writing", q:"When writing a summary, the first step is to:", opts:["A) Write your opinion about the topic","B) Identify the main ideas by underlining them and taking notes","C) Add your own examples","D) Write the conclusion first"], ans:1},
+  {cat:"Writing", q:"In a summary, you must:", opts:["A) Use the exact words from the original text","B) Use your own words and paraphrase the main ideas","C) Include many examples","D) Add new ideas of your own"], ans:1},
+  {cat:"Writing", q:"Which of the following should you NOT do when writing a summary?", opts:["A) Use appropriate linkers","B) Include examples","C) Cite your source","D) Paraphrase main ideas"], ans:1},
+  {cat:"Writing", q:"When writing a persuasive essay, you should:", opts:["A) Ignore opposing views","B) Think about opposing views and arguments","C) Only present your own opinion","D) Be aggressive with the reader"], ans:1},
+  {cat:"Writing", q:"In a persuasive essay, it is recommended to address the reader:", opts:["A) In a very formal and distant way","B) In as friendly a manner as possible","C) Only at the beginning","D) By using aggressive language"], ans:1},
+  {cat:"Writing", q:"When writing a personal narrative, you should:", opts:["A) State everything explicitly","B) Use devices that make your story more vivid","C) Only write about happy events","D) Avoid revealing your thoughts"], ans:1},
+  {cat:"Writing", q:"A good technique in personal narratives is to:", opts:["A) Never ask the reader questions","B) Include parts where you are thinking aloud","C) Keep the same pace throughout","D) Explain every single detail"], ans:1},
+  {cat:"Writing", q:"When writing about your vision, the first step suggested is to:", opts:["A) Open your eyes and look around","B) Close your eyes and visualize (create imaginary mental pictures)","C) Search the internet for ideas","D) Write the first sentence immediately"], ans:1},
+  {cat:"Writing", q:"To write about your vision effectively, you should:", opts:["A) Use only simple words","B) Use vivid descriptions and similes","C) Avoid creativity","D) Never use a thesaurus"], ans:1},
+  {cat:"Writing", q:"When writing an email to a friend, the greeting and sign-off should be:", opts:["A) Very formal","B) Informal (e.g., Hi + first name, Best wishes + your name)","C) Without any greeting","D) Only using full names"], ans:1},
+  {cat:"Writing", q:"In an email to a friend, you should write:", opts:["A) As if you were speaking to him/her (using contractions, emoticons, abbreviations)","B) Only in complete formal sentences","C) Without any punctuation","D) Using very long and complicated words"], ans:0},
+  {cat:"Writing", q:"When comparing two or more entities, you should first:", opts:["A) Write your personal opinion","B) Identify different aspects/components of the entities","C) Only talk about similarities","D) Only talk about differences"], ans:1},
+  {cat:"Writing", q:"Which is NOT good advice for writing a summary?", opts:["A) Do not introduce new ideas","B) Use your own words","C) Include many examples","D) Cite your source"], ans:2},
+  {cat:"Writing", q:"In a persuasive essay, you should use arguments that:", opts:["A) Only support the opposing view","B) Support your view and weaken the opposing view","C) Are very aggressive","D) Patronize the reader"], ans:1},
+  {cat:"Writing", q:"When writing a personal account, including details helps the reader to:", opts:["A) Feel bored","B) Visualize places and people and anticipate what will happen next","C) Skip the text","D) Only read the facts"], ans:1},
+  {cat:"Writing", q:"When writing about your vision, it is recommended to:", opts:["A) Address your readers directly","B) Never mention films or science fiction","C) Avoid using adjectives","D) Only use nouns"], ans:0},
+  {cat:"Writing", q:"In personal narratives, some developments or thoughts:", opts:["A) Must be stated explicitly","B) Are naturally understood by the reader","C) Should be completely removed","D) Must be repeated many times"], ans:1},
+  {cat:"Writing", q:"When preparing to compare language (spoken vs. written), you should think about:", opts:["A) Only vocabulary","B) Appropriateness (formal or informal) and different aspects","C) Only grammar rules","D) Nothing specific"], ans:1},
+  {cat:"Writing", q:"The Writing Corner advises using two different colors when analyzing a model text to highlight:", opts:["A) Nouns and verbs","B) Factual sentences and the writer's personal comments/thoughts","C) Long and short sentences","D) Introduction and conclusion"], ans:1},
+  {cat:"Writing", q:"Which of the following is good advice for a persuasive essay?", opts:["A) Be aggressive with opposing views","B) Reflect on things that put you off reading and avoid them","C) Patronize the reader","D) Ignore the reader's possible thoughts"], ans:1},
+  {cat:"Writing", q:"When writing an email to a friend, you can use:", opts:["A) Only full forms (no contractions)","B) Emoticons and abbreviations","C) Very complex academic vocabulary","D) Only formal language"], ans:1},
+  {cat:"Writing", q:"When you are not sure about the entities you need to compare, you should:", opts:["A) Guess","B) Look up the topic and find out which parts they consist of","C) Write only about one entity","D) Avoid the comparison task"], ans:1},
+  {cat:"Writing", q:"In a personal narrative, varying the pace of the story depends on:", opts:["A) The number of pages","B) The events and the feelings/mood involved","C) The reader's age only","D) The time of day"], ans:1},
+  {cat:"Writing", q:"When writing about your vision, using a thesaurus or dictionary helps you to:", opts:["A) Make your writing more boring","B) Find better and more precise words","C) Shorten your text","D) Remove all descriptions"], ans:1},
+  {cat:"Writing", q:"A good technique when writing a personal narrative is to:", opts:["A) Address direct questions to the reader (e.g., Who would think of such a thing?)","B) Never speak directly to the reader","C) Only write in the third person","D) Avoid any emotion"], ans:0},
+  {cat:"Writing", q:"In summaries, you should:", opts:["A) Add your personal opinion","B) Not include examples","C) Copy long sentences from the original","D) Introduce new ideas"], ans:1},
+  {cat:"Writing", q:"When comparing two students talking about a football game, the focus should be on:", opts:["A) Only the score of the game","B) What kind of language they would use to support their teams","C) Only the weather during the match","D) The names of all players"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  READING – Passage 2: Artificial Intelligence
+  // ══════════════════════════════════════════
+  {cat:"Reading", q:"[AI Passage] AI development started in the 1950s.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] Alan Turing was a key figure in early AI research.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] Early AI systems were as powerful as modern ones.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[AI Passage] Machine learning enables computers to learn from data.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] AI is currently used in recommendation systems for movies and products.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] Self-driving cars are an example of AI application.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] AI can never help in medical diagnosis.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[AI Passage] Job displacement is one concern related to AI development.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] Algorithmic bias is not mentioned as an ethical issue.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[AI Passage] Strong AI means machines with intelligence equal to or greater than humans.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] The passage claims that AI will definitely replace all human jobs.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[AI Passage] Data privacy is an important ethical concern in AI.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] AI only affects the technology sector and no other fields.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[AI Passage] Advances in computing power have contributed to AI progress.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[AI Passage] Experts completely agree on when human-level AI will be achieved.", opts:["True","False"], ans:1},
+
+  // ══════════════════════════════════════════
+  //  READING – Passage 3: Maya Civilization
+  // ══════════════════════════════════════════
+  {cat:"Reading", q:"[Maya Passage] The Maya civilization existed only in present-day Mexico.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Maya Passage] The Maya built large stone pyramids and temples.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] They developed one of the few complete writing systems in the ancient Americas.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] The Maya never used mathematics in their society.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Maya Passage] Their calendar was highly accurate.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] Maize was an important crop for the Maya.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] The Maya completely disappeared after 900 CE.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Maya Passage] Overpopulation and drought may have contributed to the decline of Maya cities.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] Maya astronomers studied the movements of planets.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] The passage states that the Maya invented the concept of zero.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] Millions of people of Maya descent still live in Central America today.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] The Maya only built small villages and never developed large cities.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Maya Passage] Terracing was one of their agricultural techniques.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Maya Passage] The Maya civilization began after 1000 CE.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Maya Passage] Warfare was possibly one reason for the decline of some Maya cities.", opts:["True","False"], ans:0},
+
+  // ══════════════════════════════════════════
+  //  READING – Passage 4: Mental Health
+  // ══════════════════════════════════════════
+  {cat:"Reading", q:"[Mental Health Passage] Mental health only refers to the absence of mental illness.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Mental Health Passage] Mental health affects how people handle stress.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Academic pressure and social media can affect young people's mental health.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Anxiety and depression are examples of mental health conditions.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Mental health problems never affect physical health.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Mental Health Passage] Therapy and counseling can help treat mental health issues.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Stigma around mental health makes it harder for people to seek help.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Schools are starting to pay more attention to mental health education.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Exercise and good sleep have no effect on mental well-being.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Mental Health Passage] Mental health is as important as physical health according to the passage.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Early intervention cannot prevent serious mental health problems.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Mental Health Passage] Social connections support good mental health.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] Economic uncertainty is mentioned as a possible factor affecting mental health.", opts:["True","False"], ans:0},
+  {cat:"Reading", q:"[Mental Health Passage] The passage suggests that mental health awareness has decreased recently.", opts:["True","False"], ans:1},
+  {cat:"Reading", q:"[Mental Health Passage] Strong social relationships can help mental well-being.", opts:["True","False"], ans:0},
+
+];
+
+// ─── STATE ───────────────────────────────────
+let currentCat = "All";
+let userAnswers = {};
+let displayedQuestions = [];
+
+// ─── INIT ─────────────────────────────────────
+function init() {
+  displayedQuestions = QUESTIONS.map((q, i) => ({...q, origIdx: i}));
+  renderQuestions();
+  updateStats();
+}
+
+// ─── FILTER ───────────────────────────────────
+function filterCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === cat);
+  });
+  displayedQuestions = cat === "All"
+    ? QUESTIONS.map((q, i) => ({...q, origIdx: i}))
+    : QUESTIONS.map((q, i) => ({...q, origIdx: i})).filter(q => q.cat === cat);
+  renderQuestions();
+  updateStats();
+  hideBanner();
+}
+
+// ─── RENDER ───────────────────────────────────
+function renderQuestions() {
+  const list = document.getElementById("qList");
+  const letters = ["A","B","C","D","E","F"];
+  list.innerHTML = displayedQuestions.map((q, idx) => {
+    const uid = q.origIdx;
+    const userAns = userAnswers[uid];
+    const answered = userAns !== undefined;
+    const cardCls = answered ? (userAns === q.ans ? "answered-correct" : "answered-wrong") : "";
+
+    const optsHtml = q.opts.map((o, i) => {
+      let cls = "opt-btn";
+      if (answered) {
+        if (i === q.ans) cls += " correct";
+        else if (i === userAns && userAns !== q.ans) cls += " wrong";
+      }
+      return `<button class="${cls}" onclick="selectAnswer(${uid},${i})" ${answered?"disabled":""}><span class="opt-letter">${letters[i]}</span>${o.replace(/^[A-D]\) /,"")}</button>`;
+    }).join("");
+
+    let feedback = "";
+    if (answered) {
+      if (userAns === q.ans) {
+        feedback = `<div class="feedback ok show">✓ Correct!</div>`;
+      } else {
+        const correctText = q.opts[q.ans].replace(/^[A-D]\) /,"");
+        feedback = `<div class="feedback no show">✗ Incorrect. The correct answer is: <strong>${correctText}</strong></div>`;
+      }
+    }
+
+    return `
+      <div class="q-card ${cardCls}" id="card-${uid}">
+        <div class="q-top">
+          <span class="q-num">Q${idx + 1}</span>
+          <span class="q-tag tag-${q.cat}">${q.cat}</span>
+        </div>
+        <p class="q-text">${q.q.replace(/\n/g,"<br>")}</p>
+        <div class="options">${optsHtml}</div>
+        ${feedback}
+      </div>`;
+  }).join("");
+}
+
+// ─── ANSWER ───────────────────────────────────
+function selectAnswer(uid, idx) {
+  if (userAnswers[uid] !== undefined) return;
+  userAnswers[uid] = idx;
+  updateStats();
+
+  const q = QUESTIONS[uid];
+  const card = document.getElementById("card-" + uid);
+  if (!card) return;
+
+  card.classList.toggle("answered-correct", idx === q.ans);
+  card.classList.toggle("answered-wrong", idx !== q.ans);
+
+  const btns = card.querySelectorAll(".opt-btn");
+  btns.forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.ans) b.classList.add("correct");
+    else if (i === idx && idx !== q.ans) b.classList.add("wrong");
+  });
+
+  const correctText = q.opts[q.ans].replace(/^[A-D]\) /,"");
+  const fb = document.createElement("div");
+  fb.className = idx === q.ans ? "feedback ok show" : "feedback no show";
+  fb.innerHTML = idx === q.ans
+    ? "✓ Correct!"
+    : `✗ Incorrect. The correct answer is: <strong>${correctText}</strong>`;
+  card.appendChild(fb);
+}
+
+// ─── STATS ────────────────────────────────────
+function updateStats() {
+  const total = QUESTIONS.length;
+  const answered = Object.keys(userAnswers).length;
+  const correct = Object.keys(userAnswers).filter(k => userAnswers[k] === QUESTIONS[k].ans).length;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+  document.getElementById("totalQ").textContent = total;
+  document.getElementById("totalAnswered").textContent = answered;
+  document.getElementById("totalCorrect").textContent = correct;
+  document.getElementById("totalScore").textContent = pct + "%";
+
+  const dispAnswered = displayedQuestions.filter(q => userAnswers[q.origIdx] !== undefined).length;
+  const dispTotal = displayedQuestions.length;
+  const progPct = dispTotal > 0 ? Math.round((dispAnswered / dispTotal) * 100) : 0;
+  document.getElementById("progFill").style.width = progPct + "%";
+  document.getElementById("progText").textContent = `${dispAnswered} / ${dispTotal} answered`;
+  document.getElementById("progPct").textContent = progPct + "%";
+}
+
+// ─── RESULTS ──────────────────────────────────
+function showResults() {
+  const banner = document.getElementById("scoreBanner");
+  const dispAns = displayedQuestions.filter(q => userAnswers[q.origIdx] !== undefined);
+  const correct = dispAns.filter(q => userAnswers[q.origIdx] === q.ans).length;
+  const total = displayedQuestions.length;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  const grade = pct >= 90 ? "Excellent work! 🎉"
+    : pct >= 75 ? "Good job! 👍"
+    : pct >= 60 ? "Keep practicing! 📚"
+    : "More review needed. 💪";
+
+  document.getElementById("scoreCircle").textContent = pct + "%";
+  document.getElementById("scoreGrade").textContent = grade;
+  document.getElementById("scoreMsg").textContent = `${correct} out of ${total} correct`;
+
+  const cats = {};
+  displayedQuestions.forEach(q => {
+    if (!cats[q.cat]) cats[q.cat] = {c:0,t:0};
+    cats[q.cat].t++;
+    if (userAnswers[q.origIdx] === q.ans) cats[q.cat].c++;
+  });
+
+  document.getElementById("scoreGrid").innerHTML = Object.entries(cats).map(([cat,s]) =>
+    `<div class="score-cell">
+      <div class="score-cell-val">${s.c}/${s.t}</div>
+      <div class="score-cell-lbl">${cat}</div>
+    </div>`
+  ).join("");
+
+  banner.classList.add("visible");
+  banner.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function hideBanner() {
+  document.getElementById("scoreBanner").classList.remove("visible");
+}
+
+// ─── RESET ────────────────────────────────────
+function resetAll() {
+  userAnswers = {};
+  updateStats();
+  hideBanner();
+  renderQuestions();
+}
+
+init();
+</script>
+</body>
+</html>
