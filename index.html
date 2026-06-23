@@ -35,6 +35,8 @@
     --tag-idioms-bg: rgba(236,72,153,0.15);
     --tag-functional: #f97316;
     --tag-functional-bg: rgba(249,115,22,0.15);
+    --tag-physics: #a78bfa;
+    --tag-physics-bg: rgba(167,139,250,0.15);
   }
 
   html { scroll-behavior: smooth; }
@@ -279,6 +281,7 @@
   .tag-Reading { background: var(--tag-reading-bg); color: var(--tag-reading); }
   .tag-Idioms { background: var(--tag-idioms-bg); color: var(--tag-idioms); }
   .tag-Functional { background: var(--tag-functional-bg); color: var(--tag-functional); }
+  .tag-Physics { background: var(--tag-physics-bg); color: var(--tag-physics); }
 
   .q-text {
     font-size: 15px;
@@ -363,6 +366,113 @@
     font-size: 13px;
   }
 
+  /* SUBJECT SELECTION SCREEN */
+  .subject-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+  .subject-screen::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -60%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(108,99,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .subject-screen h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #a8a4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  .subject-screen .sub-desc {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  .subject-cards {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+  }
+  .subject-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    width: 220px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .subject-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 20px;
+  }
+  .subject-card.english::before { background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(138,132,255,0.06)); }
+  .subject-card.physics::before { background: linear-gradient(135deg, rgba(167,139,250,0.12), rgba(196,181,253,0.06)); }
+  .subject-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.18); }
+  .subject-card:hover::before { opacity: 1; }
+  .subject-card.english:hover { border-color: rgba(108,99,255,0.5); box-shadow: 0 8px 32px rgba(108,99,255,0.15); }
+  .subject-card.physics:hover { border-color: rgba(167,139,250,0.5); box-shadow: 0 8px 32px rgba(167,139,250,0.15); }
+  .subject-card-icon { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  .subject-card-title { font-size: 1.3rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+  .subject-card-sub { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .subject-card-count {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .subject-card.english .subject-card-count { background: rgba(108,99,255,0.15); color: #8a84ff; }
+  .subject-card.physics .subject-card-count { background: rgba(167,139,250,0.15); color: #a78bfa; }
+  .subject-screen.gone { display: none; }
+  .app-wrap { display: none; }
+  .app-wrap.visible { display: block; }
+  .back-btn {
+    position: fixed;
+    top: 1rem; left: 1rem;
+    z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+  .back-btn.visible { display: flex; }
+
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -372,15 +482,42 @@
     .site-header { padding: 2rem 1rem 1.5rem; }
     .header-stats { gap: 1.25rem; }
     .controls-right { margin-left: 0; width: 100%; justify-content: flex-end; }
+    .subject-card { width: 160px; padding: 1.75rem 1.25rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- SUBJECT SELECTION SCREEN -->
+<div class="subject-screen" id="subjectScreen">
+  <h1>Final Exam Quiz</h1>
+  <p class="sub-desc">Choose a subject to begin</p>
+  <div class="subject-cards">
+    <div class="subject-card english" onclick="chooseSubject('english')">
+      <span class="subject-card-icon">📖</span>
+      <div class="subject-card-title">English</div>
+      <div class="subject-card-sub">Vocabulary · Grammar · Writing · Reading · Idioms · Functional</div>
+      <span class="subject-card-count">165 questions</span>
+    </div>
+    <div class="subject-card physics" onclick="chooseSubject('physics')">
+      <span class="subject-card-icon">⚛️</span>
+      <div class="subject-card-title">Physics</div>
+      <div class="subject-card-sub">MCQ · صح/خطأ · Electromagnetism · Quantum · Nuclear · Semiconductors</div>
+      <span class="subject-card-count">64 questions</span>
+    </div>
+  </div>
+</div>
+
+<!-- BACK BUTTON -->
+<button class="back-btn" id="backBtn" onclick="goBack()">← Back</button>
+
+<!-- MAIN APP -->
+<div class="app-wrap" id="appWrap">
+
 <header class="site-header">
   <div class="container">
-    <h1>English Final Exam</h1>
-    <p>Vocabulary &bull; Grammar &bull; Writing &bull; Reading &bull; Idioms &bull; Functional Language</p>
+    <h1 id="siteTitle">Final Exam Quiz</h1>
+    <p id="siteSubtitle">Choose a subject</p>
     <div class="header-stats">
       <div class="hstat"><span class="hstat-val" id="totalQ">0</span><span class="hstat-lbl">Questions</span></div>
       <div class="hstat"><span class="hstat-val" id="totalAnswered">0</span><span class="hstat-lbl">Answered</span></div>
@@ -390,15 +527,10 @@
   </div>
 </header>
 
+
 <div class="controls">
-  <div class="controls-inner">
-    <button class="cat-btn active" onclick="filterCat('All')">All</button>
-    <button class="cat-btn" onclick="filterCat('Vocabulary')">Vocabulary</button>
-    <button class="cat-btn" onclick="filterCat('Grammar')">Grammar</button>
-    <button class="cat-btn" onclick="filterCat('Writing')">Writing</button>
-    <button class="cat-btn" onclick="filterCat('Reading')">Reading</button>
-    <button class="cat-btn" onclick="filterCat('Idioms')">Idioms</button>
-    <button class="cat-btn" onclick="filterCat('Functional')">Functional</button>
+  <div class="controls-inner" id="catTabsWrap">
+    <!-- tabs injected by JS -->
     <div class="controls-right">
       <button class="ctrl-btn" onclick="resetAll()">Reset</button>
       <button class="ctrl-btn primary" onclick="showResults()">See results</button>
@@ -426,8 +558,10 @@
 </div>
 
 <footer>
-  <p>English Final Exam &mdash; All questions from your study material</p>
+  <p id="footerText">Final Exam Quiz &mdash; All questions from your study material</p>
 </footer>
+
+</div><!-- end app-wrap -->
 
 <script>
 const QUESTIONS = [
@@ -701,18 +835,133 @@ const QUESTIONS = [
   {cat:"Reading", q:"[Mental Health Passage] The passage suggests that mental health awareness has decreased recently.", opts:["True","False"], ans:1},
   {cat:"Reading", q:"[Mental Health Passage] Strong social relationships can help mental well-being.", opts:["True","False"], ans:0},
 
+  // ══════════════════════════════════════════
+  //  PHYSICS – MCQ (اختر الإجابة الصحيحة)
+  // ══════════════════════════════════════════
+  {cat:"Physics", q:"العالم الذي اكتشف أن المجال المغناطيسي المتغير يولد تياراً كهربائياً هو:", opts:["أ) أورستد","ب) مايكل فاراداي","ج) كولوم","د) نيوتن"], ans:1},
+  {cat:"Physics", q:"تتولد أكبر قيمة للقوة الدافعة الكهربائية الحثية EMF عندما يتحرك السلك في المجال المغناطيسي بزاوية مقدارها:", opts:["أ) 0°","ب) 45°","ج) 90°","د) 180°"], ans:2},
+  {cat:"Physics", q:"جهاز يعمل على تحويل الطاقة الميكانيكية إلى طاقة كهربائية:", opts:["أ) المحرك الكهربائي","ب) المولد الكهربائي","ج) الجلفانومتر","د) المكثف"], ans:1},
+  {cat:"Physics", q:"في المحول الكهربائي المثالي إذا كانت نسبة عدد لفات الملف الثانوي إلى الابتدائي أكبر من 1:", opts:["أ) رافع للجهد وخافض للتيار","ب) خافض للجهد ورافع للتيار","ج) رافع للجهد والتيار معاً","د) خافض للجهد والتيار معاً"], ans:0},
+  {cat:"Physics", q:"في تجربة تومسون عندما تتحرك الإلكترونات دون انحراف فإن سرعة الإلكترون:", opts:["أ) v = E/B","ب) v = B/E","ج) v = E×B","د) v = E²×B"], ans:0},
+  {cat:"Physics", q:"أي جهاز يستخدم لقياس النسبة بين شحنة الأيون الموجب وكتلته وفصل الأيونات وفق كتلتها؟", opts:["أ) مولد فانديجراف","ب) مطياف الكتلة","ج) المحول الكهربائي","د) الكشاف الكهربائي"], ans:1},
+  {cat:"Physics", q:"ما العلاقة الصحيحة التي تربط بين الطول الموجي λ والتردد f وسرعة الموجة v؟", opts:["أ) λ = vf","ب) λ = v/f²","ج) λ = v/f","د) f = λv"], ans:2},
+  {cat:"Physics", q:"أي من العوامل التالية يعد شرطاً أساسياً لتوليد الموجات الكهرومغناطيسية؟", opts:["أ) شحنات كهربائية ساكنة","ب) تيار كهربائي مستمر وثابت","ج) مجال مغناطيسي ثابت الشدة","د) شحنات كهربائية متسارعة"], ans:3},
+  {cat:"Physics", q:"تسمى الأشكال المختلفة للذرة التي لها الخصائص الكيميائية نفسها ولكنها مختلفة في الكتلة:", opts:["أ) الأيونات","ب) النظائر","ج) الإلكترونات","د) الفوتونات"], ans:1},
+  {cat:"Physics", q:"تسمى الخاصية التي تنتج فيها بلورات الكوارتز قوة دافعة كهربائية عند تشوهها:", opts:["أ) الكهرباء الساكنة","ب) الكهرباء المتحركة","ج) الكهرباء الإجهادية","د) الحث الكهرومغناطيسي"], ans:2},
+  {cat:"Physics", q:"في معادلة أينشتاين للتأثير الكهروضوئي ماذا يمثل الرمز ϕ ؟", opts:["أ) الطاقة الحركية العظمى للإلكترون","ب) طاقة الفوتون الساقط","ج) دالة الشغل للفلز","د) جهد الإيقاف"], ans:2},
+  {cat:"Physics", q:"وفق قانون ستيفان-بولتزمان تتناسب القدرة الكلية المنبعثة من جسم ساخن طردياً مع:", opts:["أ) T","ب) T²","ج) T³","د) T⁴"], ans:3},
+  {cat:"Physics", q:"ما العلاقة الصحيحة التي تمثل طول موجة دي برولي؟", opts:["أ) λ = h/mv","ب) λ = mv/h","ج) λ = hmv","د) λ = vh/m"], ans:0},
+  {cat:"Physics", q:"إذا زاد زخم جسم p، فماذا يحدث لطول موجة دي برولي المصاحبة له؟", opts:["أ) تزداد","ب) تقل","ج) تبقى ثابتة","د) تتذبذب"], ans:1},
+  {cat:"Physics", q:"ما التجربة التي أثبتت الطبيعة الموجية للإلكترونات؟", opts:["أ) تجربة قطرة الزيت لميليكان","ب) تأثير كومبتون","ج) تجربة دافيسون وجيرمر","د) تجربة رذرفورد"], ans:2},
+  {cat:"Physics", q:"أي العبارات التالية تصف مبدأ عدم التحديد لهايزنبرج بشكل صحيح؟", opts:["أ) يمكن تحديد موقع وزخم الجسم بدقة متناهية في نفس الوقت","ب) من غير الممكن قياس زخم جسم وتحديد موقعه بدقة في الوقت نفسه","ج) يخضع الزمان والمكان فقط لمبدأ عدم التحديد","د) ينطبق المبدأ فقط على الأجسام الكبيرة جداً"], ans:1},
+  {cat:"Physics", q:"لماذا لا يمكننا ملاحظة الطبيعة الموجية للأجسام الكبيرة مثل كرة البولينج؟", opts:["أ) لأن سرعتها تكون عالية جداً دائماً","ب) لأن كتلتها صغيرة جداً مما يجعل طول الموجة كبيراً","ج) لأن طول موجة دي برولي لها صغير جداً لا يمكن قياسه","د) لأنها لا تحمل شحنة كهربائية"], ans:2},
+  {cat:"Physics", q:"وفق نموذج بور يتناسب نصف قطر المدار طردياً مع:", opts:["أ) عدد الكم الرئيسي n","ب) مربع عدد الكم الرئيسي n²","ج) مقلوب عدد الكم الرئيسي 1/n","د) مقلوب مربع عدد الكم الرئيسي 1/n²"], ans:1},
+  {cat:"Physics", q:"أي السلاسل التالية في طيف ذرة الهيدروجين تقع في منطقة الضوء المرئي؟", opts:["أ) سلسلة ليمان","ب) سلسلة بالمر","ج) سلسلة باشن","د) سلسلة براكت"], ans:1},
+  {cat:"Physics", q:"ماذا تمثل الخطوط المعتمة التي تتخلل طيف ضوء الشمس والمعروفة بخطوط فراونهوفر؟", opts:["أ) طيف انبعاث مستمر","ب) طيف انبعاث خطي","ج) طيف امتصاص","د) أشعة جاما"], ans:2},
+  {cat:"Physics", q:"العملية التي يحدث فيها انبعاث فوتون مطابق للفوتون الساقط تسمى:", opts:["أ) الانبعاث التلقائي","ب) الانبعاث المحفز","ج) التأثير الكهروضوئي","د) الامتصاص الذري"], ans:1},
+  {cat:"Physics", q:"وفقاً لنموذج بور والنموذج الموجي يكون مدار الإلكترون مستقراً فقط إذا كان محيطه 2πr يساوي:", opts:["أ) نصف طول موجة دي برولي","ب) أعداداً صحيحة من أطوال موجة دي برولي nλ","ج) ضعف طول موجة دي برولي","د) مربع طول موجة دي برولي"], ans:1},
+  {cat:"Physics", q:"أي الخصائص التالية تميز ضوء الليزر عن الضوء الصادر من المصباح المتوهج؟", opts:["أ) ضوء غير مترابط ومتعدد الأطوال الموجية","ب) ضوء مترابط وأحادي اللون","ج) ينتشر في جميع الاتجاهات","د) تختلف موجاته في الطور"], ans:1},
+  {cat:"Physics", q:"أي المواد التالية تستخدم كشائبة مانحة للحصول على شبه موصل من النوع السالب n-type؟", opts:["أ) الجاليوم Ga","ب) الزرنيخ As","ج) الألومنيوم Al","د) البورون B"], ans:1},
+  {cat:"Physics", q:"مقدار فجوة الطاقة للجرمانيوم Ge عند درجة حرارة الغرفة:", opts:["أ) 1.1 eV","ب) 0.7 eV","ج) 5 eV","د) 10 eV"], ans:1},
+  {cat:"Physics", q:"ماذا يحدث لموصلية الفلزات عند ارتفاع درجة حرارتها؟", opts:["أ) تزداد الموصلية","ب) تقل الموصلية","ج) تظل ثابتة","د) تصبح صفراً"], ans:1},
+  {cat:"Physics", q:"كم يبلغ مقدار الهبوط في الجهد تقريباً عبر دايود السيليكون عندما يكون منحازاً أمامياً؟", opts:["أ) 0.3 V","ب) 0.4 V","ج) 0.7 V","د) 1.5 V"], ans:2},
+  {cat:"Physics", q:"في ترانزستور npn ماذا تسمى الطبقة المركزية الرقيقة المصنوعة من النوع p؟", opts:["أ) الباعث (Emitter)","ب) الجامع (Collector)","ج) القاعدة (Base)","د) المصعد (Anode)"], ans:2},
+  {cat:"Physics", q:"ما الاسم الذي يطلق على المنطقة المحيطة بالطبقة الفاصلة في الدايود والتي لا تحتوي على فجوات أو إلكترونات حرة؟", opts:["أ) طبقة التوصيل","ب) طبقة النضوب","ج) منطقة التكافؤ","د) الفجوة الموجية"], ans:1},
+  {cat:"Physics", q:"تعرف وحدة الكتلة الذرية (u) بأنها تساوي 1/12 من كتلة ذرة:", opts:["أ) الهيدروجين-1","ب) الهيليوم-4","ج) الكربون-12","د) الأكسجين-16"], ans:2},
+  {cat:"Physics", q:"أي الأنوية التالية يعد الأكثر استقراراً وترابطاً بناءً على منحنى طاقة الربط النووية؟", opts:["أ) الهيليوم ⁴He","ب) الكربون ¹²C","ج) الحديد ⁵⁶Fe","د) اليورانيوم ²³⁸U"], ans:2},
+  {cat:"Physics", q:"إذا كانت فترة عمر النصف لنظير اليود-131 هي 8 أيام، فكم يتبقى من عينة كتلتها 20g بعد 16 يوماً؟", opts:["أ) 10 g","ب) 5 g","ج) 2.5 g","د) 1 g"], ans:1},
+  {cat:"Physics", q:"المادة المستخدمة في المفاعلات النووية لامتصاص النيوترونات والتحكم في سرعة التفاعل المتسلسل:", opts:["أ) اليورانيوم المخصب","ب) الكادميوم","ج) الماء الثقيل","د) الجرافيت"], ans:1},
+  {cat:"Physics", q:"الجهاز الذي يستخدم سلسلة من الأنابيب المجوفة الموصولة بمصدر جهد متناوب لتسريع البروتونات أو الإلكترونات:", opts:["أ) المسارع الخطي","ب) السنكروترون","ج) عداد جايجر","د) حجرة الفقاعة"], ans:0},
+  {cat:"Physics", q:"وفقاً للنموذج المعياري مم يتكون البروتون؟", opts:["أ) ddu","ب) uuu","ج) uud","د) ddd"], ans:2},
+  {cat:"Physics", q:"ما العملية التي تتحول فيها الطاقة مباشرة إلى مادة وضديد المادة؟", opts:["أ) اضمحلال بيتا","ب) إنتاج الزوج","ج) الاندماج النووي","د) التفريغ الكهربائي"], ans:1},
+  {cat:"Physics", q:"أي المعادلات التالية تمثل قانون أوم؟", opts:["أ) R = V/I","ب) V = I/R","ج) R = I/V","د) RV = I"], ans:0},
+  {cat:"Physics", q:"ما مقدار القدرة المستهلكة في مدفأة مقاومتها 10Ω تعمل على فرق جهد 120V؟", opts:["أ) 1440 W","ب) 1200 W","ج) 12 W","د) 100 W"], ans:0},
+  {cat:"Physics", q:"ما المعادلة التي تمثل الطاقة الحرارية الناتجة؟", opts:["أ) E = I²Rt","ب) E = tRI","ج) E = tV²/R","د) E = tI²/R"], ans:0},
+  {cat:"Physics", q:"كيف يتم توصيل الأميتر؟", opts:["أ) على التوازي ومقاومته كبيرة","ب) على التوالي ومقاومته كبيرة","ج) على التوازي ومقاومته صغيرة جداً","د) على التوالي ومقاومته صغيرة جداً"], ans:3},
+  {cat:"Physics", q:"الجهاز الذي يعمل على حماية الناس من الصدمات الكهربائية:", opts:["أ) المنصهر الكهربائي","ب) قاطع الدائرة الكهربائية","ج) قاطع التفريغ الأرضي الخاطئ","د) الفولتميتر"], ans:2},
+  {cat:"Physics", q:"العلاقة الصحيحة لحساب القوة المغناطيسية المؤثرة في سلك:", opts:["أ) F = BLI","ب) F = LI/B","ج) F = B/LI","د) F = BL²I"], ans:0},
+  {cat:"Physics", q:"عندما يسري تياران في سلكين متوازيين وفي الاتجاه نفسه:", opts:["أ) قوة تنافر","ب) قوة تجاذب","ج) قوة دافعة كهربائية","د) صفر"], ans:1},
+  {cat:"Physics", q:"أي من الكواشف التالية يعتمد على مرور الجسيمات المشحونة خلال سائل درجة حرارته فوق درجة الغليان لتكوين فقاعات بخار؟", opts:["أ) الصفائح الفوتوغرافية","ب) حجرة الغيمة","ج) حجرة الفقاعة","د) عداد جايجر"], ans:2},
+
+  // ══════════════════════════════════════════
+  //  PHYSICS – TRUE / FALSE (صح أو خطأ)
+  // ══════════════════════════════════════════
+  {cat:"Physics", q:"[صح/خطأ] يعمل المحول الكهربائي فقط مع التيار المستمر (DC) لأنه يحتاج إلى مجال مغناطيسي ثابت.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] سرعة الموجات الكهرومغناطيسية في المواد العازلة تكون دائماً أكبر من سرعتها في الفراغ.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] في التأثير الكهروضوئي تتحرر الإلكترونات من الفلز إذا كان تردد الضوء الساقط أقل من تردد العتبة بشرط زيادة شدة الضوء.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] أظهرت تجربة دافيسون وجيرمر أن الإلكترونات تعاني من الحيود عند مرورها عبر البلورات.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] يتكون النيوترون من كواركين علويين وكوارك سفلي واحد (uud) وتكون شحنته الكلية صفراً.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] في جهاز السنكروترون تستخدم المجالات المغناطيسية لثني مسار الجسيمات وجعلها تتحرك في مسار دائري.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] تزداد المقاومة الكهربائية لسلك ما بنقصان مساحة مقطعه العرضي.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] القدرة الضائعة في أسلاك النقل تتناسب طردياً مع مربع التيار المار فيها (P = I²R).", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] يتم توصيل الفولتميتر في الدوائر الكهربائية على التوالي لقياس فرق الجهد.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] يعتبر الحديد المطاوع مثالاً على المغناطيس الدائمة التي تحتفظ بمغناطيسيتها لفترة طويلة.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] في أنبوب تومسون، القوة المغناطيسية المؤثرة في الإلكترون تكون موازية لاتجاه حركته.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] طاقة اهتزاز الذرات في الأجسام الصلبة مكمأة، أي أنها تأخذ قيماً محددة فقط.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] تكون الذرة في حالة إثارة عندما تكون طاقة الذرة عند أقل مقدار مسموح به.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] تعتبر ذرة الجاليوم (Ga) ذرة مانحة عند إضافتها لبلورة السيليكون.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] تعرف الطبقة الفاصلة في الدايود التي تخلو من ناقلات الشحنة باسم طبقة النضوب.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] التيار الكهربائي هو المعدل الزمني لتدفق الشحنة الكهربائية.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] الدوائر الكهربائية المركبة هي التي تحتوي على نوعي التوصيل (التوالي والتوازي) معاً.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] يعمل المحرك الكهربائي على تحويل الطاقة الحركية إلى طاقة كهربائية.", opts:["صح ✅","خطأ ❌"], ans:1},
+  {cat:"Physics", q:"[صح/خطأ] تكون القوة المغناطيسية المؤثرة في سلك موضوع في مجال مغناطيسي مساوية للصفر عندما يكون السلك موازياً لخطوط المجال.", opts:["صح ✅","خطأ ❌"], ans:0},
+  {cat:"Physics", q:"[صح/خطأ] يعتبر الحديد المطاوع مثالاً على المغناطيس الدائمة التي تحتفظ بمغناطيسيتها لفترة طويلة.", opts:["صح ✅","خطأ ❌"], ans:1},
+
 ];
 
 // ─── STATE ───────────────────────────────────
 let currentCat = "All";
+let currentSubject = null; // 'english' or 'physics'
 let userAnswers = {};
 let displayedQuestions = [];
 
-// ─── INIT ─────────────────────────────────────
-function init() {
-  displayedQuestions = QUESTIONS.map((q, i) => ({...q, origIdx: i}));
-  renderQuestions();
-  updateStats();
+const ENGLISH_CATS = ["All","Vocabulary","Grammar","Writing","Reading","Idioms","Functional"];
+const PHYSICS_CATS  = ["All","Physics MCQ","Physics T/F"];
+
+// ─── SUBJECT CHOOSER ──────────────────────────
+function chooseSubject(subject) {
+  currentSubject = subject;
+  userAnswers = {};
+  currentCat = "All";
+  document.getElementById("subjectScreen").classList.add("gone");
+  document.getElementById("appWrap").classList.add("visible");
+  document.getElementById("backBtn").classList.add("visible");
+
+  if (subject === "english") {
+    document.getElementById("siteTitle").textContent = "English Final Exam";
+    document.getElementById("siteSubtitle").textContent = "Vocabulary · Grammar · Writing · Reading · Idioms · Functional Language";
+    document.getElementById("footerText").textContent = "English Final Exam — All questions from your study material";
+    buildTabs(ENGLISH_CATS);
+  } else {
+    document.getElementById("siteTitle").textContent = "Physics Final Exam";
+    document.getElementById("siteSubtitle").textContent = "الفيزياء — MCQ · صح/خطأ · Electromagnetism · Quantum · Nuclear";
+    document.getElementById("footerText").textContent = "Physics Final Exam — All questions from your study material";
+    buildTabs(PHYSICS_CATS);
+  }
+
+  filterCat("All");
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  document.getElementById("subjectScreen").classList.remove("gone");
+  document.getElementById("appWrap").classList.remove("visible");
+  document.getElementById("backBtn").classList.remove("visible");
+  document.getElementById("qList").innerHTML = "";
+  hideBanner();
+  currentSubject = null;
+  userAnswers = {};
+}
+
+function buildTabs(cats) {
+  const wrap = document.getElementById("catTabsWrap");
+  const rightHtml = `<div class="controls-right">
+    <button class="ctrl-btn" onclick="resetAll()">Reset</button>
+    <button class="ctrl-btn primary" onclick="showResults()">See results</button>
+  </div>`;
+  wrap.innerHTML = cats.map(c =>
+    `<button class="cat-btn${c==="All"?" active":""}" onclick="filterCat('${c}')">${c}</button>`
+  ).join("") + rightHtml;
 }
 
 // ─── FILTER ───────────────────────────────────
@@ -721,9 +970,30 @@ function filterCat(cat) {
   document.querySelectorAll('.cat-btn').forEach(b => {
     b.classList.toggle('active', b.textContent.trim() === cat);
   });
-  displayedQuestions = cat === "All"
-    ? QUESTIONS.map((q, i) => ({...q, origIdx: i}))
-    : QUESTIONS.map((q, i) => ({...q, origIdx: i})).filter(q => q.cat === cat);
+
+  let pool = QUESTIONS.map((q, i) => ({...q, origIdx: i}));
+
+  // Restrict to current subject
+  if (currentSubject === "english") {
+    pool = pool.filter(q => q.cat !== "Physics");
+  } else if (currentSubject === "physics") {
+    pool = pool.filter(q => q.cat === "Physics");
+    // Sub-filter for physics tabs
+    if (cat === "Physics MCQ") {
+      pool = pool.filter(q => !q.q.startsWith("[صح/خطأ]"));
+    } else if (cat === "Physics T/F") {
+      pool = pool.filter(q => q.q.startsWith("[صح/خطأ]"));
+    }
+    // "All" shows all physics
+  } else {
+    pool = [];
+  }
+
+  if (cat !== "All" && currentSubject === "english") {
+    pool = pool.filter(q => q.cat === cat);
+  }
+
+  displayedQuestions = pool;
   renderQuestions();
   updateStats();
   hideBanner();
@@ -802,9 +1072,14 @@ function selectAnswer(uid, idx) {
 
 // ─── STATS ────────────────────────────────────
 function updateStats() {
-  const total = QUESTIONS.length;
-  const answered = Object.keys(userAnswers).length;
-  const correct = Object.keys(userAnswers).filter(k => userAnswers[k] === QUESTIONS[k].ans).length;
+  // Total for this subject
+  let subjectPool = QUESTIONS.map((q,i)=>({...q,origIdx:i}));
+  if (currentSubject === "english") subjectPool = subjectPool.filter(q => q.cat !== "Physics");
+  else if (currentSubject === "physics") subjectPool = subjectPool.filter(q => q.cat === "Physics");
+
+  const total = subjectPool.length;
+  const answered = subjectPool.filter(q => userAnswers[q.origIdx] !== undefined).length;
+  const correct = subjectPool.filter(q => userAnswers[q.origIdx] === q.ans).length;
   const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
 
   document.getElementById("totalQ").textContent = total;
@@ -867,7 +1142,7 @@ function resetAll() {
   renderQuestions();
 }
 
-init();
+// No auto-init — subject screen shows first
 </script>
 </body>
 </html>
